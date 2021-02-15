@@ -1,0 +1,15 @@
+MANIFEST.in
+setup.py
+rlxml/__init__.py
+rlxml/rlxml.py
+rlxml/rlxstats.py
+rlxml/version.py
+rlxml.egg-info/PKG-INFO
+rlxml.egg-info/SOURCES.txt
+rlxml.egg-info/dependency_links.txt
+rlxml.egg-info/not-zip-safe
+rlxml.egg-info/requires.txt
+rlxml.egg-info/top_level.txt
+rlxml/__pycache__/__init__.cpython-38.pyc
+rlxml/__pycache__/rlxml.cpython-38.pyc
+rlxml/__pycache__/version.cpython-38.pyc
