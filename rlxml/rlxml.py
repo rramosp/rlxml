@@ -264,9 +264,9 @@ class TimedateContinuosCoverage_Ranger:
             train_dates = (date, date + self.train_period)
             test_dates = (date + self.train_period, date + self.train_period + self.test_period)
             if self.verbose:
-                print "TR [", train_dates[0].strftime("%Y-%m-%d %H:%M:%S"), "-", train_dates[1].strftime(
+                print ("TR [", train_dates[0].strftime("%Y-%m-%d %H:%M:%S"), "-", train_dates[1].strftime(
                     "%Y-%m-%d %H:%M:%S"), "] -- TS [", \
-                    test_dates[0].strftime("%Y-%m-%d %H:%M:%S"), "-", test_dates[1].strftime("%Y-%m-%d %H:%M:%S"), "]"
+                    test_dates[0].strftime("%Y-%m-%d %H:%M:%S"), "-", test_dates[1].strftime("%Y-%m-%d %H:%M:%S"), "]")
             date += self.test_period + self.min_gap_period + (
                                                              self.max_gap_period - self.min_gap_period) * np.random.random()
 
