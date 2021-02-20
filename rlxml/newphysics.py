@@ -126,7 +126,7 @@ class SignalBg_BinnedModel:
     def clone(self, new_mu=None):
         return self.__class__(self.t, self.mu_s, self.sigma_s, 
                               self.mu if new_mu is None else new_mu, 
-                              self.bin_edges, self.n_events)
+                              self.bin_edges, self.s_tot, self.b_tot)
 
     def set_mu(self, mu):
         self.mu = mu
