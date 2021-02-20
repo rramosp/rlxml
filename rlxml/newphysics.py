@@ -118,8 +118,6 @@ class SignalBg_BinnedModel:
         self.si = self.s_tot*pd.Series([self.s.cdf(i) for i in self.bin_edges]).diff().dropna().values
         self.bi = self.b_tot*pd.Series([self.b.cdf(i) for i in self.bin_edges]).diff().dropna().values
 
-        self.compute_sibi()
-
         # distributions are only needed for sampling, delay their creation until really need them in rvs
         self.bins_distributions = None
 
