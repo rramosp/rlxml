@@ -231,7 +231,7 @@ class SignalBg_ContinuousModel:
         self.p_b = self.b_tot / self.n_events
         return self
         
-    def rvs(self, n):     
+    def rvs(self):     
         """
         sample from background and noise distributions and mix
         """   
