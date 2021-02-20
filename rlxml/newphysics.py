@@ -120,7 +120,7 @@ class SignalBg_BinnedModel:
         self.bins_distributions = None
 
     def create_poisson_distributions(self):
-        self.bins_distributions = [stats.poisson(mu=self.mu*self.si[i]+self.bi[i])\
+        self.bins_distributions = [stats.poisson(self.si[i]+self.bi[i])\
                                    for i in range(len(self.bi))]
 
     def clone(self, new_mu=None):
