@@ -101,6 +101,8 @@ class SignalBg_BinnedModel:
         self.n_events = n_events
         self.init_distributions()
 
+        print ("OK")
+
     def get_params(self, include_mu=False):
         r = {'t': self.t, 'mu_s': self.mu_s, 'mu_sigma': self.sigma_s, 'bin_edges': self.bin_edges, 'n_events': self.n_events }
         if include_mu:
@@ -148,8 +150,8 @@ class SignalBg_BinnedModel:
         \sum_{j=1}^N n_j \log (\mu s_j + b_j) - \log(n_j!) - \mu s_j + b_j $$
         """
         term = self.si+self.bi
-        return np.sum(x*np.log(term) - log_factorial(x) - term)
-
+        return np.sum(x*np.log(term) - log_factorial(x) + term)
+    
     def get_mu_MLE(self, x):
         """
         MLE estimator for mu and observed histogram x, with the rest of the params fixed
