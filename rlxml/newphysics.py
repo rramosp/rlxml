@@ -115,11 +115,18 @@ class SignalBg_BinnedModel:
         self.s_tot = int(self.n_events * self.p_s)
         self.b_tot = int(self.n_events - self.s_tot)
         
-        self.si = self.s_tot*pd.Series([self.s.cdf(i) for i in self.bin_edges]).diff().dropna().values
-        self.bi = self.b_tot*pd.Series([self.b.cdf(i) for i in self.bin_edges]).diff().dropna().values
+        #self.si = self.s_tot*pd.Series([self.s.cdf(i) for i in self.bin_edges]).diff().dropna().values
+        #self.bi = self.b_tot*pd.Series([self.b.cdf(i) for i in self.bin_edges]).diff().dropna().values
+
+        self.compute_sibi()
 
         # compute distribution for each bin
         self.bins_distributions = [stats.poisson(mu=self.si[i]+self.bi[i]) for i in range(len(self.bi))]       
+
+    def compute_sibi(self):
+        self.si = self.s_tot*pd.Series([self.s.cdf(i) for i in self.bin_edges]).diff().dropna().values
+        self.bi = self.b_tot*pd.Series([self.b.cdf(i) for i in self.bin_edges]).diff().dropna().values
+
 
     def clone(self, new_mu=None):
         return self.__class__(self.t, self.mu_s, self.sigma_s, self.mu if new_mu is None else new_mu, self.bin_edges, self.n_events)
