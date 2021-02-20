@@ -101,6 +101,7 @@ class SignalBg_BinnedModel:
         self.s_tot = s_tot
         self.b_tot = b_tot
         self.init_distributions()
+        self.n_events = self.mu*self.s_tot + self.b_tot
 
     def get_params(self, include_mu=False):
         r = {'t': self.t, 'mu_s': self.mu_s, 'mu_sigma': self.sigma_s, 'bin_edges': self.bin_edges, 'n_events': self.n_events }
@@ -209,12 +210,13 @@ class SignalBg_BinnedModel:
 
         
 class SignalBg_ContinuousModel:
-    def __init__(self, t, mu_s, sigma_s, n_events, mu):
-        self.t, self.mu_s, self.sigma_s, self.n_events, self.mu = t, mu_s, sigma_s, n_events, mu
+    def __init__(self, t, mu_s, sigma_s, s_tot, b_tot, mu):
+        self.t, self.mu_s, self.sigma_s, self.mu = t, mu_s, sigma_s, mu
+        self.s_tot, self.b_tot = s_tot, b_tot
         self.init_distributions()
         
     def clone(self):
-        return self.__class__(self.t, self.mu_s, self.sigma_s, self.n_events, self.mu)
+        return self.__class__(self.t, self.mu_s, self.sigma_s, self.s_tot, self.b_tot, self.mu)
 
     def set_mu(self, mu):
         self.mu = mu
@@ -224,10 +226,9 @@ class SignalBg_ContinuousModel:
     def init_distributions(self):
         self.b = stats.expon(scale=1/self.t)
         self.s = stats.norm(loc=self.mu_s, scale=self.sigma_s)     
-        self.n_events = int(self.n_events)
-        self.p_s, self.p_b = get_sgbg_probs(self.mu)
-        self.s_tot = int(self.n_events*self.p_s)
-        self.b_tot = int(self.n_events - self.s_tot)
+        self.n_events = self.mu*self.s_tot + self.b_tot
+        self.p_s = self.mu*self.s_tot / self.n_events
+        self.p_b = self.b_tot / self.n_events
         return self
         
     def rvs(self, n):     
