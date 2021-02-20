@@ -93,12 +93,13 @@ def get_sgbg_probs(mu):
     return p_s, p_b
 
 class SignalBg_BinnedModel:
-    def __init__(self, t, mu_s, sigma_s, mu, bin_edges, n_events):
+    def __init__(self, t, mu_s, sigma_s, mu, bin_edges, s_tot, b_tot):
 
         self.t, self.mu_s, self.sigma_s, self.mu = t, mu_s, sigma_s, mu        
         self.bin_edges = bin_edges
         self.n_bins = len(bin_edges)-1
-        self.n_events = n_events
+        self.s_tot = s_tot
+        self.b_tot = b_tot
         self.init_distributions()
 
     def get_params(self, include_mu=False):
@@ -111,7 +112,6 @@ class SignalBg_BinnedModel:
         self.b = stats.expon(scale=1/self.t)
         self.s = stats.norm(loc=self.mu_s, scale=self.sigma_s)     
 
-        self.p_s, self.p_b = get_sgbg_probs(self.mu)
         self.s_tot = int(self.n_events * self.p_s)
         self.b_tot = int(self.n_events - self.s_tot)
         
@@ -122,10 +122,13 @@ class SignalBg_BinnedModel:
         self.bins_distributions = None
 
     def create_poisson_distributions(self):
-        self.bins_distributions = [stats.poisson(mu=self.si[i]+self.bi[i]) for i in range(len(self.bi))]
+        self.bins_distributions = [stats.poisson(mu=self.mu*self.si[i]+self.bi[i])\
+                                   for i in range(len(self.bi))]
 
     def clone(self, new_mu=None):
-        return self.__class__(self.t, self.mu_s, self.sigma_s, self.mu if new_mu is None else new_mu, self.bin_edges, self.n_events)
+        return self.__class__(self.t, self.mu_s, self.sigma_s, 
+                              self.mu if new_mu is None else new_mu, 
+                              self.bin_edges, self.n_events)
 
     def set_mu(self, mu):
         self.mu = mu
@@ -147,7 +150,7 @@ class SignalBg_BinnedModel:
         $$\log \prod_{j=1}^N \frac{(\mu s_j + b_j)^{n_j}}{n_j!}e^{-\mu s_j + b_j} = \
         \sum_{j=1}^N n_j \log (\mu s_j + b_j) - \log(n_j!) - \mu s_j + b_j $$
         """
-        term = self.si+self.bi
+        term = self.mu*self.si+self.bi
         return np.sum(x*np.log(term) - log_factorial(x) - term)
      
     def get_mu_MLE(self, x):
