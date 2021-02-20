@@ -226,7 +226,7 @@ class SignalBg_ContinuousModel:
     def init_distributions(self):
         self.b = stats.expon(scale=1/self.t)
         self.s = stats.norm(loc=self.mu_s, scale=self.sigma_s)     
-        self.n_events = self.mu*self.s_tot + self.b_tot
+        self.n_events = int(self.mu*self.s_tot + self.b_tot)
         self.p_s = self.mu*self.s_tot / self.n_events
         self.p_b = self.b_tot / self.n_events
         return self
@@ -236,7 +236,7 @@ class SignalBg_ContinuousModel:
         sample from background and noise distributions and mix
         """   
         xb = self.b.rvs(self.b_tot)
-        xs = self.s.rvs(self.mu*self.s_tot)
+        xs = self.s.rvs(int(self.mu*self.s_tot))
         x = np.random.permutation(np.concatenate((xb,xs)))
         return x
 
