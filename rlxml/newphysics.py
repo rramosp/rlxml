@@ -112,13 +112,10 @@ class SignalBg_BinnedModel:
         self.b = stats.expon(scale=1/self.t)
         self.s = stats.norm(loc=self.mu_s, scale=self.sigma_s)     
 
-        self.s_tot = int(self.n_events * self.p_s)
-        self.b_tot = int(self.n_events - self.s_tot)
-        
         self.si = self.s_tot*pd.Series([self.s.cdf(i) for i in self.bin_edges]).diff().dropna().values
         self.bi = self.b_tot*pd.Series([self.b.cdf(i) for i in self.bin_edges]).diff().dropna().values
 
-        # distributions are only needed for sampling, delay their creation until really need them in rvs
+        # bins distributions are only needed for sampling, delay their creation until really need them in rvs
         self.bins_distributions = None
 
     def create_poisson_distributions(self):
