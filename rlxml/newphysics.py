@@ -101,7 +101,7 @@ class SignalBg_BinnedModel:
         self.s_tot = s_tot
         self.b_tot = b_tot
         self.init_distributions()
-        self.n_events = self.mu*self.s_tot + self.b_tot
+        self.n_events = int(self.mu*self.s_tot + self.b_tot)
 
     def get_params(self, include_mu=False):
         r = {'t': self.t, 'mu_s': self.mu_s, 'mu_sigma': self.sigma_s, 'bin_edges': self.bin_edges, 'n_events': self.n_events }
@@ -236,7 +236,7 @@ class SignalBg_ContinuousModel:
         sample from background and noise distributions and mix
         """   
         xb = self.b.rvs(self.b_tot)
-        xs = self.s.rvs(self.s_tot)
+        xs = self.s.rvs(self.mu*self.s_tot)
         x = np.random.permutation(np.concatenate((xb,xs)))
         return x
 
