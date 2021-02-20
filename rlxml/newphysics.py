@@ -149,7 +149,7 @@ class SignalBg_BinnedModel:
         """
         term = self.si+self.bi
         return np.sum(x*np.log(term) - log_factorial(x) - term)
-    
+     
     def get_mu_MLE(self, x):
         """
         MLE estimator for mu and observed histogram x, with the rest of the params fixed
