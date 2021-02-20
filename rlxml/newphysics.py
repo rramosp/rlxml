@@ -101,8 +101,6 @@ class SignalBg_BinnedModel:
         self.n_events = n_events
         self.init_distributions()
 
-        print ("OK")
-
     def get_params(self, include_mu=False):
         r = {'t': self.t, 'mu_s': self.mu_s, 'mu_sigma': self.sigma_s, 'bin_edges': self.bin_edges, 'n_events': self.n_events }
         if include_mu:
