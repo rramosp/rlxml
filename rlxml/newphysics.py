@@ -115,22 +115,16 @@ class SignalBg_BinnedModel:
         self.s_tot = int(self.n_events * self.p_s)
         self.b_tot = int(self.n_events - self.s_tot)
         
-        #self.si = self.s_tot*pd.Series([self.s.cdf(i) for i in self.bin_edges]).diff().dropna().values
-        #self.bi = self.b_tot*pd.Series([self.b.cdf(i) for i in self.bin_edges]).diff().dropna().values
-
-        self.compute_sibi()
-
-        # compute distribution for each bin
-        #self.bins_distributions = [stats.poisson(mu=self.si[i]+self.bi[i]) for i in range(len(self.bi))]       
-        self.bins_distributions = [self.create_poison_distribution(mu=self.si[i]+self.bi[i]) for i in range(len(self.bi))]       
-
-    def create_poison_distribution(self, mu):
-        return stats.poisson(mu)
-
-    def compute_sibi(self):
         self.si = self.s_tot*pd.Series([self.s.cdf(i) for i in self.bin_edges]).diff().dropna().values
         self.bi = self.b_tot*pd.Series([self.b.cdf(i) for i in self.bin_edges]).diff().dropna().values
 
+        self.compute_sibi()
+
+        # distributions are only needed for sampling, delay their creation until really need them in rvs
+        self.bins_distributions = None
+
+    def create_poisson_distributions(self):
+        self.bins_distributions = [stats.poisson(mu=self.si[i]+self.bi[i]) for i in range(len(self.bi))]
 
     def clone(self, new_mu=None):
         return self.__class__(self.t, self.mu_s, self.sigma_s, self.mu if new_mu is None else new_mu, self.bin_edges, self.n_events)
@@ -144,6 +138,9 @@ class SignalBg_BinnedModel:
         """
         sample from the distribution of each bin
         """
+        if self.bins_distributions is None:
+            self.create_poisson_distributions()
+
         return np.r_[[i.rvs(1).sum() for i in self.bins_distributions]]        
 
     def log_prob(self, x):
