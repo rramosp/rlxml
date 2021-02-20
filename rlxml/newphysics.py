@@ -124,7 +124,7 @@ class SignalBg_BinnedModel:
         #self.bins_distributions = [stats.poisson(mu=self.si[i]+self.bi[i]) for i in range(len(self.bi))]       
         self.bins_distributions = [self.create_poison_distribution(mu=self.si[i]+self.bi[i]) for i in range(len(self.bi))]       
 
-    def create_poison_distribution(mu):
+    def create_poison_distribution(self, mu):
         return stats.poison(mu)
 
     def compute_sibi(self):
