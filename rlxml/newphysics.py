@@ -148,7 +148,7 @@ class SignalBg_BinnedModel:
         \sum_{j=1}^N n_j \log (\mu s_j + b_j) - \log(n_j!) - \mu s_j + b_j $$
         """
         term = self.si+self.bi
-        return np.sum(x*np.log(term) - log_factorial(x) + term)
+        return np.sum(x*np.log(term) - log_factorial(x) - term)
     
     def get_mu_MLE(self, x):
         """
